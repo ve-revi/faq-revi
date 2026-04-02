@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAQ – Base de Conhecimento</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #161920;
+    --surface2: #1e2230;
+    --border: #2a2f40;
+    --accent: #6c63ff;
+    --accent2: #00e5a0;
+    --text: #e8eaf0;
+    --muted: #7a8099;
+    --tag-bg: #1e2a3a;
+    --tag-text: #60aaff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    padding: 3rem 2rem 2rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, #111420 0%, var(--bg) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 200px;
+    background: radial-gradient(ellipse, rgba(108,99,255,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  header h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, #fff 30%, var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+  }
+  header p {
+    color: var(--muted);
+    font-size: 1.05rem;
+    max-width: 480px;
+    margin: 0 auto 1.8rem;
+  }
+
+  /* ── SEARCH ── */
+  .search-wrap {
+    max-width: 560px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .search-wrap svg {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    pointer-events: none;
+  }
+  #searchInput {
+    width: 100%;
+    padding: 0.85rem 1rem 0.85rem 2.8rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  #searchInput:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(108,99,255,0.15);
+  }
+  #searchInput::placeholder { color: var(--muted); }
+
+  /* ── LAYOUT ── */
+  .container {
+    display: flex;
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+    gap: 2.5rem;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 1.5rem;
+    align-self: flex-start;
+    max-height: calc(100vh - 3rem);
+    overflow-y: auto;
+  }
+  .sidebar-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.8rem;
+    padding-left: 0.5rem;
+  }
+  .cat-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.45rem 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: var(--muted);
+    transition: background 0.15s, color 0.15s;
+    user-select: none;
+    margin-bottom: 2px;
+    border: none; background: transparent; width: 100%; text-align: left;
+  }
+  .cat-link:hover { background: var(--surface); color: var(--text); }
+  .cat-link.active { background: rgba(108,99,255,0.18); color: var(--accent); font-weight: 500; }
+  .cat-link .badge {
+    font-size: 0.72rem;
+    background: var(--surface2);
+    padding: 1px 7px;
+    border-radius: 99px;
+    color: var(--muted);
+  }
+  .cat-link.active .badge { background: rgba(108,99,255,0.25); color: var(--accent); }
+
+  /* ── MAIN ── */
+  main { flex: 1; min-width: 0; }
+
+  .stats-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .stats-bar strong { color: var(--text); }
+
+  /* ── CATEGORY SECTION ── */
+  .cat-section { margin-bottom: 3rem; }
+  .cat-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .cat-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .cat-header h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .cat-count {
+    margin-left: auto;
+    font-size: 0.78rem;
+    color: var(--muted);
+    background: var(--surface2);
+    padding: 2px 9px;
+    border-radius: 99px;
+  }
+
+  /* ── ACCORDION ── */
+  .faq-item {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    background: var(--surface);
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .faq-item.hidden { display: none; }
+  .faq-item:hover { border-color: var(--accent); }
+  .faq-item.open { border-color: var(--accent); }
+
+  .faq-q {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 1.2rem;
+    cursor: pointer;
+    font-size: 0.92rem;
+    font-weight: 400;
+    color: var(--text);
+    user-select: none;
+    list-style: none;
+  }
+  .faq-q::-webkit-details-marker { display: none; }
+  .faq-q .icon {
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    background: rgba(108,99,255,0.12);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: background 0.2s;
+  }
+  .faq-item.open .faq-q .icon { background: rgba(108,99,255,0.28); }
+  .faq-q .icon svg { transition: transform 0.25s; }
+  .faq-item.open .faq-q .icon svg { transform: rotate(45deg); }
+  .faq-q .q-text { flex: 1; }
+
+  .faq-a {
+    display: none;
+    padding: 0 1.2rem 1.1rem 3.5rem;
+    font-size: 0.88rem;
+    color: #adb3c9;
+    line-height: 1.75;
+    white-space: pre-wrap;
+  }
+  .faq-item.open .faq-a { display: block; }
+
+  /* ── NO RESULTS ── */
+  .no-results {
+    display: none;
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--muted);
+  }
+  .no-results svg { margin-bottom: 1rem; opacity: 0.4; }
+  .no-results p { font-size: 1.05rem; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  @media (max-width: 680px) {
+    .sidebar { display: none; }
+    .container { padding: 1.5rem 1rem 3rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Central de Dúvidas</h1>
+  <p>97 perguntas e respostas organizadas por categoria para te ajudar</p>
+  <div class="search-wrap">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="searchInput" placeholder="Pesquisar uma dúvida…">
+  </div>
+</header>
+
+<div class="container">
+  <aside class="sidebar">
+    <div class="sidebar-title">Categorias</div>
+    <div id="catNav"></div>
+  </aside>
+
+  <main>
+    <div class="stats-bar">
+      <span>Mostrando <strong id="visibleCount">97</strong> resultados</span>
+    </div>
+    <div id="faqContent"></div>
+    <div class="no-results" id="noResults">
+      <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <p>Nenhuma dúvida encontrada para essa busca.</p>
+    </div>
+  </main>
+</div>
+
+<script>
+const FAQ = {"Configuração":[{"q":"É possível criar colunas customizadas numéricas?","a":"Sim, é possível criar colunas customizadas com números, em Configuração → Criar e ocultar coluna"},{"q":"A gente consegue usar 1 número em duas plataformas diferentes?","a":"Não é possível, o número está conectado a uma API da Meta, e a Meta permite apenas uma conexão ativa por número."}],"Campanhas":[{"q":"Nos resultados da campanha, estamos considerando todos os pedidos, inclusive os pendentes de pagamento?","a":"O resultado da campanha vai contabilizar"},{"q":"No template de mensagem para \"código de rastreio enviado\", o que devo colocar no botão de ação?","a":"Nesse caso, a recomendação é inserir um link \"coringa\" da sua plataforma principal de envios (por exemplo, o site da Frenet, dos Correios, etc.). Este link servirá como uma opção para o cliente caso a integração da sua loja (ex: Shopify) não consiga enviar o link de rastreio específico daquele pedido."},{"q":"É possível filtrar contatos por campos customizados de número, usando condições como \"maior que\" ou \"menor que\"?","a":"Atualmente, ao criar um filtro para um campo customizado, as únicas condições de filtragem disponíveis são \"igual a\" e \"contém\". Ainda não é possível segmentar a base de contatos utilizando filtros numéricos como \"maior que\" ou \"menor que\"."},{"q":"Não consigo editar o texto de um template. Isso é normal?","a":"Sim, é normal. A Meta permite apenas a edição de imagens e links em templates de mensagem. Se você precisar alterar o texto, a sugestão é duplicar o template (utilizando o ícone próximo à lixeira na tela de templates) e fazer as modificações necessárias na nova versão."},{"q":"Como a receita das campanhas é calculada?","a":"A Revi atribui como receita influenciada as vendas realizadas por um cliente dentro de uma janela de 7 dias após ele ter recebido uma campanha ativa. Nos relatórios de campanha, é apresentado um funil de vendas, desde o recebimento da mensagem até a conversão."},{"q":"Qual é o modelo de atribuição que vocês usam pra atribuir um pedido a revi no seu dashboard","a":"a gente usa o modelo de atribuição de receita influenciada (a título de ilustração, é parecido com last seen/last click), em que basicamente monitoramos a base enviada e os pedidos feitos daquela base durante 7 dias é atribuído à campanha. No caso do carrinho abandonado a janela de atribuição cai para 30 horas. Agora lançamos também a opção de você poder filtrar e diminuir a janela, indo em Campanhas → Ver resultados (da campanha que vc está analisando) e no funil de vendas você pode modificar esse filtro"},{"q":"O cliente pode modificar o template direto pelo meta?","a":"Hoje as alterações de template precisam ser feitas direto pela Revi. Como estamos conectados via API com a Meta, as informações saem daqui e são refletidas lá, e não ao contrário.\nPor isso, qualquer ajuste ou modificação no template deve ser concentrado na nossa plataforma"},{"q":"Por que os templates de WhatsApp são enviados com o link \"api.userevi.com\"?","a":"O link com \"api.userevi.com\" que aparece no template enviado é normal. Ele é parte de um link interno da Revi, usado para rastrear a interação dos clientes com a mensagem. O link é gerado automaticamente e faz parte do processo de acompanhamento de performance da campanha.\n\nQuando a Meta mostra esse link, ela está exibindo o URL que usamos para monitorar o clique, o que nos ajuda a entender o engajamento dos clientes com os conteúdos enviados."},{"q":"Minha conta foi denunciada por SPAM","a":"No WhatsApp, quando uma campanha é enviada, cada destinatário pode avaliar aquela mensagem (por exemplo: denunciar como spam, bloquear, ou simplesmente ignorar). Quando uma parte dos contatos não reconhece a marca, não lembra do cadastro/compra, ou não esperava receber aquela comunicação, é comum que algumas pessoas optem por denunciar. Essas denúncias são registradas pela própria Meta e impactam a reputação do número, podendo gerar efeitos como: piora na entregabilidade, aumento de erros no disparo e risco de restrições temporárias do número. O CS da sua conta poderá ajudá-los com estratégias de campanhas do Whatsapp."},{"q":"Como funciona a Receita Influenciada?","a":"A revi trabalha com receita influenciada: enviamos uma campanha, os clientes gostam da oferta mas preferem comprar pelo desktop, então a compra foi influenciada pela Revi mesmo que feita por outro canal. No funil da Revi existem três etapas: Quem recebeu, quem leu e quem engajou/clicou."},{"q":"Cliente fez uma campanha, 1241 clientes não tinham nome nem telefone — o disparo será enviado mesmo assim?","a":"O disparo falha quando não tem nome, mesmo que o template não use nome."},{"q":"É possível fazer teste A/B para e-mail ou apenas para o WhatsApp?","a":"Teste A/B é apenas no WhatsApp mesmo."},{"q":"Se o cliente agendar uma campanha com uma tag X, clientes que entrarem durante os dias até o disparo também serão impactados?","a":"Não entram pois, por mais que a campanha esteja agendada (pendente), os contatos já foram definidos no momento do agendamento."},{"q":"Por que o e-mail não está levando as UTMs para o Olist, sendo que as campanhas levam?","a":"Em campanhas, as UTMs são enviadas, mas no fluxo elas não são. Se as UTMs não estão aparecendo no painel do Olist, pode ser necessário algum ajuste de configuração do lado deles."},{"q":"É possível realizar um teste A/B para e-mail ou isso é limitado ao WhatsApp?","a":"O teste A/B é disponível apenas para o WhatsApp."}],"Automação e Integração":[{"q":"Minha loja utiliza múltiplas transportadoras (Correios, Frenet, Olist Envios, etc.). É possível enviar um link de rastreio dinâmico?","a":"Não, atualmente a plataforma permite apenas a configuração de um link fixo no template da mensagem de rastreio. Uma alternativa é usar o link de um gateway de fretes que rastreie todas elas (como a Frenet)."},{"q":"Por que a minha automação de carrinho abandonado da Shopify está sendo enviada para alguns clientes, mas não para todos?","a":"Isso geralmente ocorre quando se utiliza um provedor de checkout externo, como a Yampi. Quando o checkout não é processado diretamente pela Shopify, a plataforma não registra o evento como um \"carrinho abandonado\" e a informação não chega à Revi."},{"q":"Na tela de resultados da automação de carrinho abandonado, o que significa cada status (Whatsapp enviado, Abandonado, Falhou)?","a":"1. Abandonado: o cliente abandonou o carrinho e foi identificado, mas ainda não houve disparo de WhatsApp (falta de opt-in, regra de prioridade, etc).\n\n2. WhatsApp Enviado: a Revi identificou o abandono e disparou a automação com sucesso via WhatsApp.\n\n3. Falhou: a Revi tentou enviar, mas não conseguiu — número inválido, cliente optou por não receber mensagens, ou o carrinho já foi impactado anteriormente."},{"q":"Queremos ativar a recuperação de carrinho, mas não aparece a opção \"Enviar por WhatsApp\". O que pode ser?","a":"Para essa automação, você deve usar o template de WhatsApp e não o envio direto. É necessário primeiro criar o template com o tipo \"Carrinho Abandonado\" para então poder selecioná-lo."},{"q":"Quando ativarmos a automação, quem ficou sem receber nos últimos dias vai receber?","a":"De forma geral, não. As automações são disparadas à medida que o pedido é atualizado. Dependemos exclusivamente de eventos que vêm da plataforma de e-commerce."}],"Atendimento":[{"q":"Ao enviar um template para o cliente tem cobrança? Ou só quando iniciamos a conversa?","a":"A cobrança é feita por janela de 24 horas e acontece somente quando a conversa é iniciada por você (empresa). Quando você inicia, precisa enviar um template. Após o cliente responder, a janela de 24h abre e você pode trocar mensagens livremente. Se o cliente iniciar a conversa, você não é cobrado."},{"q":"Por que precisamos de um template para abrir uma conversa?","a":"As políticas da Meta exigem que todas as mensagens proativas (iniciadas pela empresa) sejam pré-aprovadas via template. Isso garante qualidade, evita spam e mantém a reputação do número."},{"q":"Quanto tempo a Meta demora para expandir de 1000 para 10000 envios diários?","a":"Não há uma regra definida. Pode levar uma semana ou mais, dependendo da quantidade de campanhas e da qualidade do número."},{"q":"Erro: \"Esse número faz parte de um teste do Whatsapp\" ao tentar enviar uma mensagem.","a":"Ocasionalmente, a Meta realiza experimentos para avaliar o impacto das mensagens. Você pode fazer uma nova tentativa de envio para o mesmo número após 24 horas do erro."},{"q":"Quando aparece \"Bloqueado\", quer dizer que o contato nos bloqueou?","a":"Não. Indica que o contato optou por não receber mais campanhas promocionais (digitou \"STOP\" ou foi bloqueado manualmente), ou que o número é inválido."},{"q":"Como posso analisar os atendimentos por motivo de contato (ex: Dúvidas, Trocas)?","a":"Use \"Categorias de Conversa\". Você pode criar categorias (ex: \"Troca\", \"Financeiro\", \"Dúvida de Produto\") e atribuir cada conversa a uma delas. O relatório de métricas mostrará um gráfico com o volume por categoria."},{"q":"A categorização de uma conversa pode ser feita manualmente pelo atendente?","a":"Sim. Durante o atendimento, o operador pode clicar em \"Editar Cliente\" e selecionar ou alterar a categoria manualmente."},{"q":"Se um atendente demora mais de 24h para responder, qual o procedimento para reativar a conversa?","a":"Na caixa de texto, aparecerá um botão para \"Escolher Template\". O atendente deve clicar, selecionar o template \"iniciar_conversa\" (ou similar), preencher o campo personalizável e enviar. Isso reabrirá a janela de 24h."},{"q":"Qual a diferença técnica entre \"Setores de Conversa\" e \"Categorias de Conversa\"?","a":"Um \"Setor\" é um agrupamento macro (ex: Vendas, Suporte, Financeiro). Uma \"Categoria\" é uma subdivisão dentro de um Setor (ex: dentro de Suporte: \"Troca\", \"Avaria\", \"Rastreio\"). A estrutura é hierárquica."},{"q":"Quais são as métricas de performance que posso analisar por atendente?","a":"Por atendente você pode ver: Tickets alocados, Tickets com resposta, Mensagens enviadas, Mensagens recebidas, Tickets finalizados, Tempo mediano para primeira resposta e Tempo mediano para finalizar atendimento."},{"q":"Estamos tentando bloquear um contato, mas ele ainda consegue enviar mensagens. É assim mesmo?","a":"Sim. O bloqueio na Revi impede que a marca envie campanhas/automações para o cliente, mas não impede o cliente de falar com a marca."},{"q":"Como criar \"Respostas Rápidas\" para usar no chat da Revi?","a":"Configurações > Atendimento > Respostas Rápidas > + Resposta Rápida."},{"q":"É possível postar status no WhatsApp pela Revi?","a":"Não é possível. Este número é vinculado apenas à plataforma da Revi."},{"q":"Dá para integrar Instagram e Facebook (comentários e direct)?","a":"Atualmente, não há integração com Instagram e Facebook para comentários e mensagens direct. Quando essa funcionalidade estiver disponível, será possível integrar o agente da Revi nessas plataformas."},{"q":"Tem alguma funcionalidade que permite ter anotações nas conversas sem que o cliente veja?","a":"Sim. Com a conversa aberta, vá em \"Detalhes do Cliente\" > \"Editar\" > \"Anotações\"."},{"q":"É possível notificar um atendente de que a conversa com IA precisa de atendimento humano?","a":"No momento, fica apenas disponível nas conversas sem atendente. Não há uma função específica que chame atenção dos usuários."},{"q":"É possível criar um QR Code que direcione meus clientes para o chat da Revi?","a":"Sim. Gere o QR Code em uma plataforma externa (ex: Canva) usando o link: https://api.whatsapp.com/send?phone=SEU_NUMERO. Sugerimos consultar seu CS para definir a melhor estratégia."},{"q":"Se meu horário de atendimento vai até 18h mas o cliente manda mensagem às 19h, a Revi vai ignorar o horário e priorizar o fluxo configurado?","a":"Sim, a Revi prioriza o fluxo configurado, mesmo fora do horário de atendimento. Se o cliente não estiver em nenhum fluxo, receberá a mensagem do horário de atendimento."},{"q":"É possível criar um grupo VIP no WhatsApp pela Revi?","a":"Não. Mas você pode criar uma tag \"VIP\" e disparar mensagens individuais para cada contato selecionado."},{"q":"A janela de 24h começa a contar do template enviado ou da última mensagem do fluxo?","a":"Depois que o cliente responde, é possível responder livremente em até 24h. Essa janela conta sempre a partir da última mensagem do cliente."},{"q":"A Revi cobra quando uma mensagem falha na entrega?","a":"Não. A Revi não está cobrando por erros nos disparos, mesmo que relacionados a números inválidos ou erros da Meta."},{"q":"Como funciona o status \"em espera\" dentro da tela de conversas?","a":"É uma forma de tirar a conversa de \"em aberto\" sem finalizar o ticket (o tempo continua contando). Se o cliente mandar uma mensagem, o ticket volta automaticamente para \"em aberto\". Tickets em espera também são fechados pelo encerramento automático, se configurado."},{"q":"Por que alguns chats aparecem e logo somem na tela de conversas?","a":"A conversa leva alguns segundos para receber atribuição automática. Nesse intervalo ela aparece na caixa geral; quando o atendente clica, a conversa já foi atribuída e ele não consegue mais vê-la (pois só vê o que está sem atribuição)."},{"q":"A função 'Ocultar em Fluxo' pode impactar os relatórios de atendimento?","a":"Não. Ela apenas oculta a conversa visualmente para o atendente durante o fluxo. Os tickets continuam sendo contabilizados normalmente no sistema."},{"q":"Como interpretar corretamente os números no relatório de atendimento?","a":"Novos atendimentos: conversas que entraram pela primeira vez no período.\nFinalizados: atendimentos encerrados no período.\nEm aberto e em espera: conversas ainda ativas."},{"q":"Apareceu um pico alto de conversas finalizadas no relatório. O que pode ser?","a":"Pode ser causado pela funcionalidade \"Encerrar atendimento após um período\". Ela varre todos os tickets abertos e fecha automaticamente os que atingiram o tempo configurado."},{"q":"Como acompanhar o volume real de atendimentos que chega para a equipe?","a":"Acompanhe o volume por atendente filtrando cada um deles na parte superior do gráfico."},{"q":"No chat da Revi, o cliente pode apagar ou editar uma mensagem já enviada?","a":"Não. No chat da Revi, não é possível apagar ou editar mensagens que já foram enviadas."}],"Geral":[{"q":"O que é a matriz RFM e como ela é utilizada na plataforma?","a":"A matriz RFM (Recência, Frequência e Valor Monetário) segmenta os clientes com base em comportamento de compra. Cada cliente recebe uma pontuação de 1 a 5 para cada variável, resultando em uma pontuação de 3 dígitos (de 111 a 555). A plataforma classifica automaticamente em categorias como \"Campeões\", \"Em risco\", \"Fiéis\", permitindo campanhas direcionadas para cada segmento."},{"q":"Por que no dashboard não aparecem os horários com mais pedidos?","a":"Os dados não estão retornando o horário do pedido feito na integração. Quando os dados foram importados para a Revi (no onboarding), os pedidos também estavam sem horário."},{"q":"De quanto em quanto tempo é disparado o carrinho abandonado da Nuvemshop?","a":"Verificamos das 09h às 18h, nos minutos 5 e 35 de cada hora."},{"q":"Onde posso analisar o tempo médio de recompra dos meus clientes?","a":"No dashboard principal (ícone de casa), no gráfico de Frequência de Compras. Ele mostra o tempo médio em dias entre o 1º e 2º pedido, entre o 2º e 3º, etc."},{"q":"Como salvar uma segmentação de clientes para usar depois?","a":"Após aplicar os filtros desejados em Clientes, clique em Ações > Salvar filtro. Os filtros salvos são dinâmicos: a lista se atualiza automaticamente conforme os clientes cumprem ou deixam de cumprir os critérios."},{"q":"Se eu optar por integrar apenas a Yampi em vez da Shopify, perco alguma funcionalidade importante?","a":"Em termos de dados de vendas e inteligência, a diferença é mínima. No entanto, a integração com a Shopify oferece automações de cashback, enquanto a Yampi não."},{"q":"É possível importar uma lista de contatos para a plataforma e criar uma campanha para eles?","a":"Sim. Você pode importar listas (formato CSV) e adicionar tags específicas. Pontos importantes: sem colunas em branco, máximo de 15k registros por planilha, sem duas abas, formato CSV, número sem DDD não será importado."},{"q":"Um cliente que nunca comprou, mas entrou em contato pelo WhatsApp, entra para a base de clientes?","a":"Sim. Assim que uma pessoa inicia uma conversa com seu número, ela é adicionada à base de contatos, mesmo sem histórico de compras."},{"q":"Consigo medir o ROI das minhas campanhas?","a":"Sim. A plataforma monitora por 7 dias as vendas geradas pela audiência impactada após cada campanha, exibindo o total de vendas, o custo da campanha e o ROI."},{"q":"Por que preciso criar e aprovar templates antes de enviar uma campanha?","a":"A API Oficial do WhatsApp (Meta) exige que todas as mensagens proativas sejam pré-aprovadas. Isso garante qualidade, evita spam e mantém a reputação do número."},{"q":"O dashboard de análise é personalizável? Posso adicionar ou remover gráficos?","a":"Atualmente, os relatórios e gráficos são fixos. Se precisar de um relatório específico, solicite ao seu CSM."},{"q":"A plataforma classifica meus clientes automaticamente?","a":"Sim. A Revi analisa automaticamente o comportamento de compra (RFM) e distribui dinamicamente os clientes nas categorias, dos \"Campeões\" aos \"Hibernando\"."},{"q":"As bases criadas a partir de um filtro salvo são estáticas ou dinâmicas?","a":"100% dinâmicas. Um cliente entra ou sai automaticamente conforme seu comportamento corresponde ou não aos critérios definidos."},{"q":"Onde posso exportar um relatório detalhando as vendas, os clientes, etc?","a":"Vá na tela de Campanhas, clique em Exportar, selecione o período desejado ou todas as campanhas."},{"q":"Quando o cliente responder com STOP, o que acontece?","a":"Em Configurações > Atendimento existe a palavra-chave de OPT-OUT. Se configurado como STOP, o cliente será automaticamente bloqueado da Revi, não recebendo mais campanhas ou automações. Você ainda pode responder a ele na conversa individual."},{"q":"O cliente pode ter dois números na Revi?","a":"Não é possível ter 2 números. Você poderia ter 2 contas na Revi ou 1 número com vários usuários."},{"q":"O número dos pedidos cancelados aparece igual, mas os pagos divergem entre Revi e Nuvemshop.","a":"A Nuvemshop tem dois IDs: um interno (mais longo) e um de exibição (mais curto). A Revi subiu uma correção para exibir o ID mais curto, mas pedidos mais antigos ainda exibem o ID longo para evitar duplicatas."},{"q":"As mensagens 'enviadas' são as que contabilizam no saldo?","a":"Sim, são as enviadas. A Revi não cobra erros no envio das mensagens."}],"Integração":[{"q":"É possível recuperar carrinhos abandonados que ocorreram antes de eu ativar a automação?","a":"A automação só funciona para eventos futuros. Para recuperar carrinhos passados, exporte a lista, importe na Revi com uma tag específica (ex: \"carrinho_antigo\") e crie uma campanha pontual para esses clientes."}],"Importação":[{"q":"Existe um limite de contatos que posso importar em um único arquivo?","a":"Sim. O ideal é dividir a base em arquivos de até 15.000 linhas cada para garantir a estabilidade do sistema."},{"q":"Qual o processo recomendado para importar contatos e já aplicar uma tag?","a":"1. Vá para a tela de \"Clientes\".\n2. Clique em \"Importar Arquivo\" > \"Dados Cadastrais\".\n3. Selecione o arquivo (.csv).\n4. Na tela de mapeamento, utilize o campo \"Adicionar tag\".\n5. Finalize a importação. Todos os contatos serão criados com essa tag."},{"q":"É possível importar uma base de clientes e uma base de pedidos separadamente e a Revi fará a junção?","a":"Sim. Suba primeiro a planilha com dados cadastrais (nome, e-mail, telefone). Depois, ao subir a planilha de pedidos com um identificador único (e-mail ou telefone), a Revi localiza o cliente na base e atribui o pedido."}],"Automação":[{"q":"O link no botão de uma automação de Carrinho Abandonado é sempre o mesmo?","a":"Não. Embora você insira um link genérico na configuração do template, a plataforma o substitui dinamicamente pelo link específico do carrinho de cada cliente no momento do envio."}],"Templates":[{"q":"Como faço para editar templates que já foram criados?","a":"Não é possível editar um template diretamente. Você pode duplicá-lo e alterar o corpo da mensagem. Para mudar foto ou link, acesse diretamente a aba de Templates."},{"q":"Quais são os parâmetros disponíveis para template de e-mail?","a":"Os parâmetros mapeados (dentro de {{ }}) são:\n{{nome do consumidor}}, {{nome da empresa}}, {{id do consumidor}}, {{nome do atendente}}, {{texto personalizado}}, {{codigo de rastreio}}, {{produtos do carrinho abandonado}}, {{id do pedido}}, {{cta link}}"},{"q":"Quando escolho enviar um template na automação dentro da janela de 24h, ainda sou cobrado?","a":"Sim! Todos os templates são cobrados, mesmo dentro da janela de 24h."}],"Campanha – Bloqueio de Contato":[{"q":"Quando o status aparece como \"Bloqueado\" na Revi, isso significa que o cliente me bloqueou?","a":"Não. O status \"Bloqueado\" indica que o contato optou por não receber mais campanhas (digitou STOP ou foi bloqueado manualmente). Também pode ocorrer por número inválido.\n\nPara desbloquear: clique no ícone de \"bonequinho\" ao lado de Finalizar > Editar Cliente > Desative \"Bloqueado?\". Depois use o template de Contato Inicial para retomar a conversa."}],"Atendimento – IA":[{"q":"Com a IA ativa, consigo fazer fluxos com trigger por palavra-chave?","a":"Não. Se o agente de IA estiver ativo, ele tem predominância e o trigger não será executado."},{"q":"O Agente de IA não está respondendo corretamente. O que verificar?","a":"Verifique: itens não marcados para sincronização com a Meta; itens com estoque 0; produtos com status diferente de \"ativo\"; itens com preço 0 ou negativo. Todos esses fatores impedem a sincronização correta."}],"Configuração da Conta":[{"q":"Para aparecer o nome da marca no WhatsApp dos clientes, eles precisam salvar o contato?","a":"Se a BM estiver verificada com o display name aprovado pela Meta, o nome da marca aparece automaticamente mesmo sem o cliente salvar. Se o cliente salvar de outra forma, aparecerá do jeito que ele salvou."}],"Dúvidas Gerais":[{"q":"Quais os tamanhos de mídia permitidos pela Meta?","a":"Mídia em fluxo: Vídeo MP4 ou 3GPP — até 5MB.\n\nTemplates: até 15MB para envio.\nDimensões: templates carrossel → 1024x512; templates normais → recomendado 1080x1080."}],"Agente de IA":[{"q":"Como alimentar o Agente de IA com mais conhecimento?","a":"Através da FAQ é a maneira direta. A equipe está trabalhando em adicionar novas fontes de dados."}],"Cashback":[{"q":"Que tipo de botão devo colocar no template do cashback?","a":"Use o botão de resposta rápida com o texto \"RESGATAR CASHBACK\". Este tipo de template não permite URLs."},{"q":"O crédito de cashback é liberado imediatamente após a compra ou após confirmação do pagamento?","a":"O crédito e o envio da mensagem acontecem conforme o status do pedido definido pela loja — ou seja, vinculado ao status configurado como gatilho nas regras de cashback da Revi."},{"q":"O cliente pode acumular vários cashbacks e converter tudo em um único cupom?","a":"O saldo é acumulativo enquanto o cliente não converter. Se resgatar após a 1ª compra e depois fizer outra, terá dois cupons distintos. Se não resgatar antes da 2ª compra, ao resgatar receberá um único cupom com o valor acumulado."},{"q":"Em caso de troca, cancelamento ou devolução, o cashback é cancelado automaticamente?","a":"Sim, desde que o status de cancelamento esteja configurado no campo de restrições dentro das configurações de cashback da Revi."},{"q":"Existe valor máximo de uso do cashback por pedido?","a":"Não há valor máximo. A definição é pelo valor mínimo via multiplicador. Ex: multiplicador 3,5x e saldo R$100 → o cliente precisa de uma compra mínima de R$350 para usar o cupom."},{"q":"O programa de cashback é válido para todas as formas de pagamento (Pix, cartão, boleto)?","a":"Todas as formas de pagamento aceitas no e-commerce são elegíveis. Não é possível excluir ou definir valores específicos por forma de pagamento."},{"q":"O cashback é pessoal e intransferível?","a":"O cashback é um código pessoal, porém não vinculado ao usuário. Pode ser utilizado por outro usuário que tenha acesso ao código."},{"q":"Caso o cliente não solicite a conversão em cupom dentro do prazo, o saldo expira?","a":"Há duas configurações de prazo:\n1. \"Crédito expira em X dias\" — prazo para converter o crédito em cupom.\n2. \"Cupom expira em X dias\" — prazo para usar o cupom após a conversão.\n\nEx: crédito expira em 5 dias, cupom em 10 dias. Compra em 01/01 → até 05/01 para converter → até 15/01 para usar."},{"q":"Se eu mudar as regras do cashback, os cupons já gerados entram na regra nova?","a":"Não. Cupons gerados antes da mudança de regra continuam válidos conforme a regra vigente no momento em que foram criados. A nova regra se aplica apenas a créditos gerados depois da alteração."}],"Fluxo":[{"q":"O time delay máximo em um fluxo é de 24h ou posso configurar delays maiores?","a":"Não há limite de 24h para o time delay. É possível configurar 48h, 72h ou mais. Atenção: se a janela da Meta (24h) se fechar, o template será disparado abrindo nova janela de conversa — e cada disparo de template é cobrado."}],"Base de Consumidores":[{"q":"É possível subir dados de clientes sem nome, telefone ou e-mail?","a":"Sim, é possível. Mas sem telefone o cliente não receberá campanhas no WhatsApp. Sem nome, as campanhas serão enviadas sem personalização (o parâmetro {{nome do consumidor}} não será substituído)."},{"q":"Como faço para exportar uma segmentação de clientes?","a":"Hoje não é possível exportar uma base diretamente da tela de clientes dentro da Revi."}],"Matriz RFM":[{"q":"Como funciona a Matriz RFM?","a":"Campeões: compraram recentemente, com frequência, gastam muito. → VIP, upsell, indicação.\nClientes fiéis: frequência alta, ticket variado. → Programas de fidelidade, aumentar ticket.\nPotenciais fiéis: compraram recentemente, ainda não frequentes. → Incentivar 2ª/3ª compra.\nPromissores: recentes, baixa frequência e valor. → Nutrição, ofertas de entrada.\nClientes recentes: primeira compra recente. → Pós-venda forte, incentivar 2ª compra.\nPrecisam de atenção: reduzindo frequência ou valor. → Reengajamento.\nEm risco: não compram há um tempo. → Campanha de resgate com benefício agressivo.\nNão pode perder: foram ótimos clientes e estão sumindo. → Ação quase 1:1, benefício exclusivo.\nPresto a dormir: inativos. → Campanhas sazonais, reativação leve.\nHibernando: muito tempo sem comprar. → Campanha de 'sentimos sua falta'.\nPerdidos: churn consolidado. → Avaliar custo de reativação."},{"q":"Por que na tela da Matriz RFM aparecem menos clientes do que na tela de Clientes?","a":"Clientes que compraram há menos de 14 dias não aparecem na RFM. Isso evita impactar com campanhas quem acabou de comprar."}]};
+
+const CAT_COLORS = [
+  '#6c63ff','#00e5a0','#ff6b6b','#ffd166','#06d6a0',
+  '#ef476f','#118ab2','#f77f00','#7b2d8b','#2ec4b6',
+  '#e63946','#457b9d','#a8dadc','#f4a261','#e9c46a',
+  '#48cae4','#90be6d','#f72585'
+];
+
+const categories = Object.keys(FAQ);
+const nav = document.getElementById('catNav');
+const content = document.getElementById('faqContent');
+
+function buildNav() {
+  nav.innerHTML = '';
+  const allBtn = document.createElement('button');
+  allBtn.className = 'cat-link active';
+  allBtn.dataset.cat = 'all';
+  allBtn.innerHTML = `<span>Todas</span><span class="badge">${Object.values(FAQ).flat().length}</span>`;
+  allBtn.onclick = () => filterCat('all', allBtn);
+  nav.appendChild(allBtn);
+
+  categories.forEach((cat, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'cat-link';
+    btn.dataset.cat = cat;
+    btn.innerHTML = `<span>${cat}</span><span class="badge">${FAQ[cat].length}</span>`;
+    btn.onclick = () => filterCat(cat, btn);
+    nav.appendChild(btn);
+  });
+}
+
+function buildContent() {
+  content.innerHTML = '';
+  categories.forEach((cat, ci) => {
+    const color = CAT_COLORS[ci % CAT_COLORS.length];
+    const section = document.createElement('div');
+    section.className = 'cat-section';
+    section.id = 'cat-' + ci;
+    section.dataset.cat = cat;
+
+    section.innerHTML = `<div class="cat-header">
+      <span class="cat-dot" style="background:${color}"></span>
+      <h2>${cat}</h2>
+      <span class="cat-count">${FAQ[cat].length} itens</span>
+    </div>`;
+
+    FAQ[cat].forEach((item, qi) => {
+      const div = document.createElement('div');
+      div.className = 'faq-item';
+      div.dataset.q = item.q.toLowerCase();
+      div.dataset.a = item.a.toLowerCase();
+      div.dataset.cat = cat;
+
+      div.innerHTML = `<div class="faq-q">
+        <span class="icon">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round">
+            <line x1="5" y1="0" x2="5" y2="10"/><line x1="0" y1="5" x2="10" y2="5"/>
+          </svg>
+        </span>
+        <span class="q-text">${item.q}</span>
+      </div>
+      <div class="faq-a">${item.a.replace(/\n/g,'<br>')}</div>`;
+
+      div.querySelector('.faq-q').onclick = () => {
+        const isOpen = div.classList.contains('open');
+        document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+        if (!isOpen) div.classList.add('open');
+      };
+
+      section.appendChild(div);
+    });
+
+    content.appendChild(section);
+  });
+}
+
+let currentCat = 'all';
+
+function filterCat(cat, btn) {
+  currentCat = cat;
+  document.querySelectorAll('.cat-link').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  document.querySelectorAll('.cat-section').forEach(sec => {
+    sec.style.display = (cat === 'all' || sec.dataset.cat === cat) ? '' : 'none';
+  });
+
+  // re-apply search
+  const q = document.getElementById('searchInput').value;
+  if (q) applySearch(q);
+  else updateCount();
+}
+
+function applySearch(q) {
+  const term = q.toLowerCase().trim();
+  let visible = 0;
+
+  document.querySelectorAll('.faq-item').forEach(item => {
+    const catMatch = currentCat === 'all' || item.dataset.cat === currentCat;
+    const textMatch = !term || item.dataset.q.includes(term) || item.dataset.a.includes(term);
+    const show = catMatch && textMatch;
+    item.classList.toggle('hidden', !show);
+    if (show) visible++;
+  });
+
+  // hide empty sections
+  document.querySelectorAll('.cat-section').forEach(sec => {
+    const hasCatFilter = currentCat === 'all' || sec.dataset.cat === currentCat;
+    const hasVisible = [...sec.querySelectorAll('.faq-item')].some(i => !i.classList.contains('hidden'));
+    sec.style.display = hasCatFilter && hasVisible ? '' : 'none';
+  });
+
+  document.getElementById('visibleCount').textContent = visible;
+  document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
+}
+
+function updateCount() {
+  let visible = 0;
+  document.querySelectorAll('.faq-item').forEach(i => {
+    if (!i.classList.contains('hidden')) visible++;
+  });
+  document.getElementById('visibleCount').textContent = visible;
+  document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
+}
+
+document.getElementById('searchInput').addEventListener('input', e => {
+  const q = e.target.value;
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('hidden'));
+  if (q) applySearch(q);
+  else {
+    document.querySelectorAll('.cat-section').forEach(sec => {
+      sec.style.display = (currentCat === 'all' || sec.dataset.cat === currentCat) ? '' : 'none';
+    });
+    updateCount();
+  }
+});
+
+buildNav();
+buildContent();
+updateCount();
+</script>
+</body>
+</html>
